@@ -1,0 +1,8 @@
+# byte code file
+*.pyc
+
+# virtual environment
+venv
+
+# sqlite database
+db.sqlite3

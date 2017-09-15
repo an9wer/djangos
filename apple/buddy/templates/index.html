@@ -1,0 +1,25 @@
+<form action="/index/" method="post">
+    <label for="name">Your name: </label>
+        {{ form.non_field_errors }}
+            {% comment %}
+            {{ form.name.errors }}
+            {% endcomment %}
+        {% csrf_token %}
+        {{ form.name }}
+        <input id="name" type="text" name="name" value='nieeeee'>
+         <select multiple="multiple">
+             <option>1</option>
+             <option>2</option>
+             <option>3</option>
+             <option>4</option>
+         </select>
+    <input type="submit" value="OK">
+</form>
+
+<!--
+<form action="/index/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type='submit' value='Submit'>
+</form>
+-->
