@@ -65,6 +65,7 @@ class View(object):
             self.request = request
             self.args = args
             self.kwargs = kwargs
+            # 调用 dispatch()
             return self.dispatch(request, *args, **kwargs)
         view.view_class = cls
         view.view_initkwargs = initkwargs
@@ -85,6 +86,7 @@ class View(object):
             handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
         else:
             handler = self.http_method_not_allowed
+        # 调用 POST() GET() 等
         return handler(request, *args, **kwargs)
 
     def http_method_not_allowed(self, request, *args, **kwargs):
