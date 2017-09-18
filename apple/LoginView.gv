@@ -16,7 +16,7 @@ digraph LoginView {
     ContextMixin -> FormMixin;
 
     // ProcessFormView
-    ProcessFormView [shape=Mrecord, label="{ProcessFormView | {{{get| post| put | head | option}}}}"];
+    ProcessFormView [shape=Mrecord, label="{ProcessFormView | {get| post| put}}"];
     View -> ProcessFormView;
 
     // BaseFormView
