@@ -11,8 +11,8 @@ class Name(models.Model):
     name = models.EmailField(null=True, validators=[validate_email])
     age = models.EmailField(validators=[validate_email])
 
-class age(models.Model):
-    email = models.EmailField(validators=[validate_email])
+class Age(models.Model):
+    age = models.IntegerField()
     #name = models.EmailField(null=True, validators=[validate_email])
     #age = models.EmailField(validators=[validate_email])
 

@@ -1,3 +1,4 @@
+<!--
 <form action="/index/" method="post">
     <label for="name">Your name: </label>
         {{ form.non_field_errors }}
@@ -15,11 +16,10 @@
          </select>
     <input type="submit" value="OK">
 </form>
+-->
 
-<!--
 <form action="/index/" method="post">
     {% csrf_token %}
     {{ form }}
     <input type='submit' value='Submit'>
 </form>
--->
