@@ -95,6 +95,8 @@ class ModelBase(type):
         classcell = attrs.pop('__classcell__', None)
         if classcell is not None:
             new_attrs['__classcell__'] = classcell
+        # 这里调用 type.__new__(cls, name, bases, new_attrs)
+        # 并且返回一个新的对象 new_calss
         new_class = super_new(cls, name, bases, new_attrs)
         attr_meta = attrs.pop('Meta', None)
         abstract = getattr(attr_meta, 'abstract', False)

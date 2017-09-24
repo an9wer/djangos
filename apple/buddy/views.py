@@ -14,8 +14,8 @@ def index(request):
         #print request.POST['name']
         age = Age.objects.first()
         form = AgeForm(request.POST, instance=age)
-        print 1211111111111
-        print form.__dict__
+        #print 1211111111111
+        #print form.__dict__
         if form.is_valid():
             #print form.instance.age
             form.save()
