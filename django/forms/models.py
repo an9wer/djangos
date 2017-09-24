@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Helper functions for creating Form classes from Django models
 and database field objects.
@@ -41,6 +43,8 @@ def construct_instance(form, instance, fields=None, exclude=None):
     """
     from django.db import models
     opts = instance._meta
+    print opts
+    print opts.fields
 
     cleaned_data = form.cleaned_data
     file_field_list = []
@@ -278,6 +282,7 @@ class BaseModelForm(BaseForm):
         opts = self._meta
         if opts.model is None:
             raise ValueError('ModelForm has no model class specified.')
+        # self.instance 是 model 的实例对象
         if instance is None:
             # if we didn't get an instance, instantiate a new one
             self.instance = opts.model()
@@ -388,7 +393,10 @@ class BaseModelForm(BaseForm):
                 exclude.append(name)
 
         try:
+            print self.instance.age
+            # 在这里改变 instance 的值
             self.instance = construct_instance(self, self.instance, opts.fields, opts.exclude)
+            print self.instance.age
         except ValidationError as e:
             self._update_errors(e)
 

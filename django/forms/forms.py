@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Form classes
 """
@@ -171,6 +173,7 @@ class BaseForm(object):
     @property
     def errors(self):
         "Returns an ErrorDict for the data provided for the form"
+        # 从这里开始调用 full_clean()
         if self._errors is None:
             self.full_clean()
         return self._errors
@@ -180,6 +183,7 @@ class BaseForm(object):
         Returns True if the form has no errors. Otherwise, False. If errors are
         being ignored, returns False.
         """
+        # 从这里开始调用 full_clean()
         return self.is_bound and not self.errors
 
     def add_prefix(self, field_name):
@@ -381,8 +385,11 @@ class BaseForm(object):
         if self.empty_permitted and not self.has_changed():
             return
 
+        # 先 clean fields
         self._clean_fields()
+        # 然后 clean form
         self._clean_form()
+        # ?
         self._post_clean()
 
     def _clean_fields(self):
@@ -395,22 +402,28 @@ class BaseForm(object):
             else:
                 value = field.widget.value_from_datadict(self.data, self.files, self.add_prefix(name))
             try:
+                # 调用 Field.clean(value) 
                 if isinstance(field, FileField):
                     initial = self.get_initial_for_field(field, name)
                     value = field.clean(value, initial)
                 else:
                     value = field.clean(value)
                 self.cleaned_data[name] = value
+
+                # 调用 clean_<fieldname>()
                 if hasattr(self, 'clean_%s' % name):
                     value = getattr(self, 'clean_%s' % name)()
                     self.cleaned_data[name] = value
             except ValidationError as e:
+                # 将 ValidationError 添加到指定的 name 中
                 self.add_error(name, e)
 
     def _clean_form(self):
         try:
+            # 调用 Form.clean()
             cleaned_data = self.clean()
         except ValidationError as e:
+            # 将 ValidationError 添加到 NON_FIELD_ERRORS 中
             self.add_error(None, e)
         else:
             if cleaned_data is not None:

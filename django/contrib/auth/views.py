@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import functools
 import warnings
 
@@ -121,6 +123,7 @@ class LoginView(SuccessURLAllowedHostsMixin, FormView):
         context = super(LoginView, self).get_context_data(**kwargs)
         current_site = get_current_site(self.request)
         context.update({
+            # 将 next 置入环境变量
             self.redirect_field_name: self.get_success_url(),
             'site': current_site,
             'site_name': current_site.name,
