@@ -43,6 +43,8 @@ def construct_instance(form, instance, fields=None, exclude=None):
     """
     from django.db import models
     opts = instance._meta
+    print opts
+    print opts.fields
 
     cleaned_data = form.cleaned_data
     file_field_list = []
