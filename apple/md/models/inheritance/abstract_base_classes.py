@@ -25,7 +25,7 @@ class SubAbstract(Abstract):
         # abstract = False
 
 if __name__ == "__main__":
-    s = SubAbstract(name="an9wer", 99)
+    s = SubAbstract(name="an9wer", age=9)
     s.save()
     print s.name    # return "an9wer"
     print s.age     # return 99
