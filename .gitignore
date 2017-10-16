@@ -6,3 +6,6 @@ venv
 
 # sqlite database
 db.sqlite3
+
+# migrations file
+00*
