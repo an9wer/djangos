@@ -8,4 +8,4 @@ venv
 db.sqlite3
 
 # migrations file
-migrations
+00*
