@@ -1,0 +1,5 @@
+<form method="POST" action="/view/entry/" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="file_name">
+    <input type='submit' value='Submit'>
+</form>

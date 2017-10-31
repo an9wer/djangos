@@ -19,4 +19,5 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('buddy.urls')),
+    url(r'^view/', include('view_layer.urls')),
 ]
