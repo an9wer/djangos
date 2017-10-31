@@ -9,3 +9,6 @@ db.sqlite3
 
 # migrations file
 00*
+
+# media file
+media
