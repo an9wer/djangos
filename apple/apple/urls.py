@@ -18,6 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('buddy.urls')),
-    url(r'^view/', include('view_layer.urls')),
+    url(r'^forms_frame/', include('forms_frame.urls')),
 ]

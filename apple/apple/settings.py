@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 Django settings for apple project.
 
@@ -22,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'o6qmuu_y$cvh(e88cx6$b)1c)gpgu4u*aup&@mipe+mbay=k-7'
+SECRET_KEY = '(!i!4qxz9950b18vh1e8&#m#&rv2%5z-k-sy5an3k9n_d-am8@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']   # A value of '*' will match anything
 
 
 # Application definition
@@ -39,9 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'buddy',
-    'md',
-    'view_layer',
+    'forms_frame',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +55,7 @@ ROOT_URLCONF = 'apple.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -108,13 +104,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'zh-Hans'
+LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Shanghai'
-
-#LANGUAGE_CODE = 'en-us'
-
-#TIME_ZONE = 'UTC'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -127,9 +119,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-
-# Media files
-# 如果 MEDIA_ROOT = '' ，表示其存储在项目目录下
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
