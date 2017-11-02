@@ -6,6 +6,9 @@ class FileForm(forms.Form):
 class MultipleFileForm(forms.Form):
     field = forms.FileField(widget=forms.ClearableFileInput(attrs={"multiple": True}))
 
+class ClearFileForm(forms.Form):
+    field = forms.FileField(required=False, widget=forms.ClearableFileInput)
+
 
 """
 两点：

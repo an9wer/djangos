@@ -1,2 +1,2 @@
 from .multiplechoice import MultipleChoiceForm
-from .file import FileForm, MultipleFileForm
+from .file import FileForm, MultipleFileForm, ClearFileForm
