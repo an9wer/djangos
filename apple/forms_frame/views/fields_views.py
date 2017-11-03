@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from ..models import FileModel
-from ..forms import MultipleChoiceForm, FileForm, MultipleFileForm, ClearFileForm
+from ..forms import (
+    MultipleChoiceForm, FileForm, MultipleFileForm, ClearFileForm,
+    ModelChoiceForm, ModelMultipleChoiceForm)
 
 
 def fields_multiplacechoice(request):
@@ -55,3 +57,23 @@ def fields_clearfile(request):
 
         """
     return render(request, "fields/clearfile.html", {"form": form})
+
+
+def fields_modelchoice(request):
+    if request.method == "POST":
+        form = ModelChoiceForm(request.POST, request.FILES)
+        if form.is_valid():
+            return HttpResponse("ok")
+    else:
+        form = ModelChoiceForm()
+    return render(request, "fields/modelchoice.html", {"form": form})
+
+
+def fields_modelmultiplechoice(request):
+    if request.method == "POST":
+        form = ModelMultipleChoiceForm(request.POST, request.FILES)
+        if form.is_valid():
+            return HttpResponse("ok")
+    else:
+        form = ModelMultipleChoiceForm()
+    return render(request, "fields/modelmultiplechoice.html", {"form": form})

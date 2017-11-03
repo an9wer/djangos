@@ -1,2 +1,4 @@
 from .multiplechoice import MultipleChoiceForm
 from .file import FileForm, MultipleFileForm, ClearFileForm
+from .modelchoice import ModelChoiceForm
+from .modelmultiplechoice import ModelMultipleChoiceForm

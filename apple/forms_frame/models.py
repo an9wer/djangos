@@ -13,3 +13,10 @@ class Son(models.Model):
 
 class FileModel(models.Model):
     field = models.FileField(upload_to="file/")
+
+
+class CharModel(models.Model):
+    field = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.field
