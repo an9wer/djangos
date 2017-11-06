@@ -1,0 +1,91 @@
+from django.db import models
+
+
+class FatherModel(models.Model):
+    field = models.CharField(max_length=20)
+
+
+class SonModel(models.Model):
+    father = models.ForeignKey(FatherModel)
+    field = models.CharField(max_length=20)
+
+
+class NameSonModel(models.Model):
+    father = models.ForeignKey(FatherModel, related_name="name_sons")
+    field = models.CharField(max_length=20)
+
+
+class QueryNameSonModel(models.Model):
+    father = models.ForeignKey(FatherModel, related_query_name="query_name_sons")
+    field = models.CharField(max_length=20)
+
+
+class BothNameSonModel(models.Model):
+    father = models.ForeignKey(FatherModel, related_name="both_name_sons",
+                               related_query_name="both_query_name_sons")
+    field = models.CharField(max_length=20)
+
+"""
+related_name: The name to use for the relation from the related object back to this one.
+
+    >>> f = Father(field="father")
+    >>> f.sonmodel_set
+    >>> f.name_sons
+    >>> f.querynamemodel_set
+    >>> f.both_name_sons
+
+使用 help(f) 可以发现 f 有四个属性：sonmodel_set, name_sons, querynamemodel_set,
+both_name_sons 分别对应 SonModel, NameSonModel, QueryNameSonModel, BothNameSonModel 
+这四个 model 的 RelatedManager，通过 RelatedManager 又可以得到 QuerySets。
+
+如果没有在 ForeignKey 中定义 related_name 参数，则只能使用 FOO_set 的形式来
+获取 RelatedManager
+
+If a model has a ForeignKey, instances of the foreign-key model will have access 
+to a Manager that returns all instances of the first model. By default, this 
+Manager is named FOO_set, where FOO is the source model name, lowercased. This 
+Manager returns QuerySets, which can be filtered and manipulated.
+
+Example:
+
+    >>> b = Blog.objects.get(id=1)
+    >>> b.entry_set.all() # Returns all Entry objects related to Blog.
+
+    # b.entry_set is a Manager that returns QuerySets.
+    >>> b.entry_set.filter(headline__contains='Lennon')
+    >>> b.entry_set.count()
+
+You can override the FOO_set name by setting the related_name parameter in the 
+ForeignKey definition. For example, if the Entry model was altered to 
+blog = ForeignKey(Blog, on_delete=models.CASCADE, related_name='entries'), 
+the above example code would look like this:
+
+        >>> b = Blog.objects.get(id=1)
+        >>> b.entries.all() # Returns all Entry objects related to Blog.
+
+        # b.entries is a Manager that returns QuerySets.
+        >>> b.entries.filter(headline__contains='Lennon')
+        >>> b.entries.count()
+"""
+
+# -------------------------------------------------------------------------- #
+
+"""
+related_query_name: The name to use for the reverse filter name from the target model. 
+
+    >>> FatherModel.objects.filter(sonmodel=XXX)
+    >>> FatherModel.objects.filter(name_sons=XXX)
+    >>> FatherModel.objects.filter(query_name_sons=XXX)
+    >>> FatherModel.objects.filter(both_query_name_sons=XXX)
+
+    其中：XXX 是各个 Son Model 的 instance。
+
+如果在 ForeignKey 中定义了 related_query_name 参数，则使用该参数的值在 Query 
+中表示父 Model，如果没有定义 related_query_name 参数则使用 related_name 参数的
+值在 Query 中表示父 Model，如果也没有定义 related_name 参数，则使用父 Model 的
+名字（小写）在 Query 中表示父 Model。
+
+The name to use for the reverse filter name from the target model. It defaults 
+to the value of related_name or default_related_name if set, otherwise it 
+defaults to the name of the model
+"""
