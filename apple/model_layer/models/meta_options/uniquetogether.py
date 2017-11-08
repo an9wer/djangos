@@ -8,6 +8,15 @@ class UniqueTogetherModel(models.Model):
         unique_together = (("char", "integer"),)
 
 
+class NullUniqueTogetherModel(models.Model):
+    char = models.CharField(max_length=20, null=True)
+    integer = models.IntegerField(null=True)
+
+    class Meta:
+        unique_together = (("char", "integer"),)
+
+
+
 """
     >>> u = UniqueTogetherModel(char="char1", integer=1)
     >>> u.save()    # ok
@@ -23,6 +32,20 @@ class UniqueTogetherModel(models.Model):
     >>>
     >>> u = UniqueTogetherModel(char="char2", integer=2)
     >>> u.save()    # raise django.db.IntegrityError
+
+
+    >>> nut = NullUniqueTogetherModel(char="char")
+    >>> nut.save()  # ok
+    >>>
+    >>> nut = NullUniqueTogetherModel(char="char")
+    >>> nut.save()  # ok
+    >>>
+    >>> nut = NullUniqueTogetherModel()
+    >>> nut.save()  # ok
+    >>>
+    >>> nut = NullUniqueTogetherModel()
+    >>> nut.save()  # ok
+    >>>
 
 
 注意：类型是 ManyToMany 的 Field 不能用在 unique_together 中

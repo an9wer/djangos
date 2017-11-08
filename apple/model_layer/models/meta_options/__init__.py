@@ -1,1 +1,1 @@
-from .uniquetogether import UniqueTogetherModel
+from .uniquetogether import UniqueTogetherModel, NullUniqueTogetherModel
