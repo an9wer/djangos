@@ -15,4 +15,7 @@ urlpatterns = [
 
     url(r'apis/bound/$', views.apis_bound),
     url(r'apis/initial/$', views.apis_initial),
+    url(r'apis/as/$', views.apis_as),
+
+    url(r'widgets/attrs/$', views.widgets_attrs),
 ]

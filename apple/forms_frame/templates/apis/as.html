@@ -1,0 +1,25 @@
+<form action="/forms_frame/apis/as/" method="POST">
+    {% csrf_token %}
+    <table>
+    {{ table_form.as_table }}
+    </table>
+    <input type="submit" value="Press">
+</form>
+
+</br>
+
+<form action="/forms_frame/apis/as/" method="POST">
+    {% csrf_token %}
+    <ul>
+    {{ ul_form.as_ul }}
+    </ul>
+    <input type="submit" value="Press">
+</form>
+
+</br>
+
+<form action="/forms_frame/apis/as/" method="POST">
+    {% csrf_token %}
+    {{ p_form.as_p }}
+    <input type="submit" value="Press">
+</form>
