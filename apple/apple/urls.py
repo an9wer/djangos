@@ -18,9 +18,12 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 
+from . import views
+
 # 最后加上 /media/ 中文件的路由，否则会 404
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', views.root_view),
     url(r'^forms_frame/', include('forms_frame.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
