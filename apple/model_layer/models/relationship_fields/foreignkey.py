@@ -25,14 +25,15 @@ class BothNameSonModel(models.Model):
                                related_query_name="both_query_name_sons")
     field = models.CharField(max_length=20)
 
+
 """
 related_name: The name to use for the relation from the related object back to this one.
 
     >>> f = Father(field="father")
-    >>> f.sonmodel_set
-    >>> f.name_sons
-    >>> f.querynamemodel_set
-    >>> f.both_name_sons
+    >>> f.sonmodel_set          # 得到的是 SonModel
+    >>> f.name_sons             # 得到的是 NameSonModel
+    >>> f.querynamemodel_set    # 得到的是 QueryNameSonModel
+    >>> f.both_name_sons        # 得到的是 BothNameSonModle
 
 使用 help(f) 可以发现 f 有四个属性：sonmodel_set, name_sons, querynamemodel_set,
 both_name_sons 分别对应 SonModel, NameSonModel, QueryNameSonModel, BothNameSonModel 
@@ -81,9 +82,9 @@ related_query_name: The name to use for the reverse filter name from the target 
     其中：XXX 是各个 Son Model 的 instance。
 
 如果在 ForeignKey 中定义了 related_query_name 参数，则使用该参数的值在 Query 
-中表示父 Model，如果没有定义 related_query_name 参数则使用 related_name 参数的
-值在 Query 中表示父 Model，如果也没有定义 related_name 参数，则使用父 Model 的
-名字（小写）在 Query 中表示父 Model。
+中表示子 Model，如果没有定义 related_query_name 参数则使用 related_name 参数的
+值在 Query 中表示子 Model，如果也没有定义 related_name 参数，则使用子 Model 的
+名字（小写）在 Query 中表示子 Model。
 
 The name to use for the reverse filter name from the target model. It defaults 
 to the value of related_name or default_related_name if set, otherwise it 
