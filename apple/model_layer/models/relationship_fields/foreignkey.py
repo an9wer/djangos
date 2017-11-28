@@ -27,13 +27,13 @@ class BothNameSonModel(models.Model):
 
 
 """
-related_name: The name to use for the relation from the related object back to this one.
+关于 related_name: The name to use for the relation from the related object back to this one.
 
     >>> f = Father(field="father")
-    >>> f.sonmodel_set          # 得到的是 SonModel
-    >>> f.name_sons             # 得到的是 NameSonModel
-    >>> f.querynamemodel_set    # 得到的是 QueryNameSonModel
-    >>> f.both_name_sons        # 得到的是 BothNameSonModle
+    >>> f.sonmodel_set          # 得到的是 SonModel 的 RelatedManager
+    >>> f.name_sons             # 得到的是 NameSonModel 的 RelatedManager
+    >>> f.querynamemodel_set    # 得到的是 QueryNameSonModel 的 RelatedManager
+    >>> f.both_name_sons        # 得到的是 BothNameSonModle 的 RelatedManager
 
 使用 help(f) 可以发现 f 有四个属性：sonmodel_set, name_sons, querynamemodel_set,
 both_name_sons 分别对应 SonModel, NameSonModel, QueryNameSonModel, BothNameSonModel 
@@ -72,7 +72,7 @@ the above example code would look like this:
 # -------------------------------------------------------------------------- #
 
 """
-related_query_name: The name to use for the reverse filter name from the target model. 
+关于 related_query_name: The name to use for the reverse filter name from the target model. 
 
     >>> FatherModel.objects.filter(sonmodel=XXX)
     >>> FatherModel.objects.filter(name_sons=XXX)
@@ -89,4 +89,22 @@ related_query_name: The name to use for the reverse filter name from the target 
 The name to use for the reverse filter name from the target model. It defaults 
 to the value of related_name or default_related_name if set, otherwise it 
 defaults to the name of the model
+"""
+
+
+"""
+关于 RelatedManager:
+
+    >>> f1 = FatherModel.objects.create(field="f1")
+    >>> s1 = SonModel.objects.create(field="s1", father=f1)
+    >>>
+    >>> f1.sonmodel_set
+    <django.db.models.fields.related_descriptors.create_reverse_many_to_one_manager
+    .<locals>.RelatedManager at 0x7fddf2791710>   
+    >>>
+    >>> s1.father
+    <FatherModel: FatherModel object>
+
+    也就是 f1.sonmodel_set 得到的是 RelatedManager 对象，s1.father 得到的是 
+    FatherModel 对象
 """
