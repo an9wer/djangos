@@ -2,6 +2,7 @@ from .field_options import *
 from .relationship_fields import *
 from .meta_options import *
 from .aggregation import *
+from .field_types import *
 
 
 """

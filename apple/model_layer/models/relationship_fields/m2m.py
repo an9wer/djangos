@@ -11,7 +11,7 @@ class StudentModel(models.Model):
 
 
 class StudentWithThroughModel(models.Model):
-    classroom = models.ManyToManyField(TeacherModel, through=TeacherModel)
+    classroom = models.ManyToManyField(TeacherModel, through='ClassroomModel')
     field = models.CharField(max_length=20)
 
 
@@ -19,6 +19,7 @@ class ClassroomModel(models.Model):
     teacher = models.ForeignKey(TeacherModel)
     student = models.ForeignKey(StudentWithThroughModel)
     field = models.CharField(max_length=20)
+
 
 
 """
