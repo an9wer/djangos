@@ -76,6 +76,7 @@ class FormMixin(ContextMixin):
         """
         If the form is valid, redirect to the supplied URL.
         """
+        # 跳转到 success_url
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
