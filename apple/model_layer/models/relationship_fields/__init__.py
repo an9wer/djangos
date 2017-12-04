@@ -1,4 +1,9 @@
-from .foreignkey import FatherModel, SonModel, NameSonModel, QueryNameSonModel
+from .o2o import (
+    HusbandModel, WifeModel, NameWifeModel,
+    QueryNameWifeModel, BothNameWifeModel)
+from .foreignkey import (
+    FatherModel, SonModel, NameSonModel,
+    QueryNameSonModel, BothNameSonModel)
 from .m2m import TeacherModel, StudentModel
 
 

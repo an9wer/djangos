@@ -1,0 +1,63 @@
+[
+{
+    "model": "model_layer.fatheraggregationmodel",
+    "pk": 1,
+    "fields": {
+        "char_field": "father1",
+        "int_field": 100
+    }
+},
+{
+    "model": "model_layer.fatheraggregationmodel",
+    "pk": 2,
+    "fields": {
+        "char_field": "father2",
+        "int_field": 200
+    }
+},
+{
+    "model": "model_layer.sonaggregationmodel",
+    "pk": 1,
+    "fields": {
+        "father": 1,
+        "char_field": "son1",
+        "int_field": 101
+    }
+},
+{
+    "model": "model_layer.sonaggregationmodel",
+    "pk": 2,
+    "fields": {
+        "father": 1,
+        "char_field": "son2",
+        "int_field": 102
+    }
+},
+{
+    "model": "model_layer.sonaggregationmodel",
+    "pk": 3,
+    "fields": {
+        "father": 1,
+        "char_field": "son3",
+        "int_field": 103
+    }
+},
+{
+    "model": "model_layer.sonaggregationmodel",
+    "pk": 4,
+    "fields": {
+        "father": 2,
+        "char_field": null,
+        "int_field": 201
+    }
+},
+{
+    "model": "model_layer.sonaggregationmodel",
+    "pk": 5,
+    "fields": {
+        "father": 2,
+        "char_field": null,
+        "int_field": 202
+    }
+}
+]

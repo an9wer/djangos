@@ -17,3 +17,5 @@
 -   django.http     (HttpResponse, HttpResponseForbidden, HttpResponseNotFound)
 
 -   django.utils.html   (template_html)
+
+-   models.ImageField

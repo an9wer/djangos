@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'authentication_tool',
     'model_layer',
     'admin_site',
+    'migrations_tool',
 ]
 
 MIDDLEWARE = [
