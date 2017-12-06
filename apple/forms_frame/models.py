@@ -20,3 +20,9 @@ class CharModel(models.Model):
 
     def __str__(self):
         return self.field
+
+
+class OTTModel(models.Model):
+    one = models.CharField(max_length=20)
+    two = models.CharField(max_length=20)
+    three = models.CharField(max_length=20)

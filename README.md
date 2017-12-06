@@ -19,3 +19,5 @@
 -   django.utils.html   (template_html)
 
 -   models.ImageField
+
+-   signal
