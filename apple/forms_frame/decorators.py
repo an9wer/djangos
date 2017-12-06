@@ -5,6 +5,8 @@ url_form = {
     "/forms_frame/modelforms/allfields/": AllFieldsForm,
     "/forms_frame/modelforms/excludefields/": ExcludeFieldsForm,
     "/forms_frame/modelforms/overridefields/": OverrideFieldsFrom,
+    "/forms_frame/modelforms/restricted-inheritanceson/": RestrictedInheritanceSonForm,
+    "/forms_frame/modelforms/expanded-inheritanceson/": ExpandedInheritanceSonForm,
 }
 
 

@@ -23,4 +23,6 @@ urlpatterns = [
     url(r'modelforms/allfields/$', views.common_form),
     url(r'modelforms/excludefields/$', views.common_form),
     url(r'modelforms/overridefields/$', views.common_form),
+    url(r'modelforms/restricted-inheritanceson/$', views.common_form),
+    url(r'modelforms/expanded-inheritanceson/$', views.common_form),
 ]

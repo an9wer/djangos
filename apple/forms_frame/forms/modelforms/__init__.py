@@ -1,5 +1,8 @@
 from .meta import (
     PartFieldsForm, AllFieldsForm, ExcludeFieldsForm, OverrideFieldsFrom,)
+from .inheritance import (
+    InheritanceFatherForm, EnhancedInheritanceSonForm,
+    RestrictedInheritanceSonForm, ExpandedInheritanceSonForm,)
 
 from django import forms
 
