@@ -71,6 +71,6 @@ a string suitable for representing it. For example:
 
     class MyModelChoiceField(ModelChoiceField):
         def label_from_instance(self, obj):
-                return "My Object #%i" % obj.id
+            return "My Object #%i" % obj.id
 
 """
