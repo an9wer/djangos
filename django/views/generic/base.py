@@ -61,6 +61,7 @@ class View(object):
                                 "attributes of the class." % (cls.__name__, key))
 
         def view(request, *args, **kwargs):
+            # 实例化 View class
             self = cls(**initkwargs)
             if hasattr(self, 'get') and not hasattr(self, 'head'):
                 self.head = self.get
