@@ -14,6 +14,7 @@ def staticfiles_urlpatterns(prefix=None):
     return static(prefix, view=serve)
 
 
+# 只有在 DEBUG 为 True 的情况下，staticfiles app 才会生效
 # Only append if urlpatterns are empty
 if settings.DEBUG and not urlpatterns:
     urlpatterns += staticfiles_urlpatterns()

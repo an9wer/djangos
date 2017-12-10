@@ -107,6 +107,12 @@ default:
     If multiple files with the same name are present, the first file that is
     found will be used.
 
+    注意：FileSystemFinder 找的是 STATICFILES_DIRS 中包含的文件夹中的内容，但是
+    STATICFILES_DIRS 不能包含 STATIC_ROOT 文件夹，所以 staticfiles app 不会去找寻
+    STATIC_ROOT 文件夹中的内容，也就是说如果将各个 app 中的 static 文件夹删除，
+    只剩下 STATIC_ROOT 文件夹，启动项目后会发现，即使 DEBUG 为 True，所有的静态
+    文件也都无法找到。（STATIC_ROOT 文件夹的目的是用在生产环境中的）
+
     One finder is disabled by default: django.contrib.staticfiles.finders.DefaultStorageFinder.
     If added to your STATICFILES_FINDERS setting, it will look for static files
     in the default file storage as defined by the DEFAULT_FILE_STORAGE setting.

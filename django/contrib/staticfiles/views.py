@@ -31,6 +31,7 @@ def serve(request, path, insecure=False, **kwargs):
     if not settings.DEBUG and not insecure:
         raise Http404
     normalized_path = posixpath.normpath(unquote(path)).lstrip('/')
+    # 使用 STATICFILES_FINDERS 中定义的 finder 寻找文件
     absolute_path = finders.find(normalized_path)
     if not absolute_path:
         if path.endswith('/') or path == '':
