@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'model_layer',
     'admin_site',
     'migrations_tool',
+    'view_layer',
 ]
 
 MIDDLEWARE = [
@@ -130,5 +131,19 @@ STATIC_URL = '/static/'
 # Media files
 # 如果 MEDIA_ROOT = '' ，表示其存储在项目目录下
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# load local settings
+
+try:
+    with open(os.path.join(BASE_DIR, 'apple', 'settings.conf')) as f:
+        source = f.read()
+except FileNotFoundError:
+    print('Cannot load settings.conf\n')
+else:
+    try:
+        exec(compile(source, '<string>', 'exec'))
+    except Exception:
+        print('It seems something wrong in settings.conf\n')

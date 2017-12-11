@@ -41,6 +41,8 @@ def page_not_found(request, exception, template_name=ERROR_404_TEMPLATE_NAME):
         'exception': exception_repr,
     }
     try:
+        # 默认将获取名为 404.html 的 template，如果不存在该 template，
+        # 则有 django 使用 from_string 拼出一个 404 页面
         template = loader.get_template(template_name)
         body = template.render(context, request)
         content_type = None             # Django will use DEFAULT_CONTENT_TYPE
@@ -65,6 +67,8 @@ def server_error(request, template_name=ERROR_500_TEMPLATE_NAME):
     Context: None
     """
     try:
+        # 默认将获取名为 505.html 的 template，如果不存在该 template，
+        # 则有 django 使用 from_string 拼出一个 505 页面
         template = loader.get_template(template_name)
     except TemplateDoesNotExist:
         if template_name != ERROR_500_TEMPLATE_NAME:
@@ -83,6 +87,8 @@ def bad_request(request, exception, template_name=ERROR_400_TEMPLATE_NAME):
     Context: None
     """
     try:
+        # 默认将获取名为 400.html 的 template，如果不存在该 template，
+        # 则有 django 使用 from_string 拼出一个 400 页面
         template = loader.get_template(template_name)
     except TemplateDoesNotExist:
         if template_name != ERROR_400_TEMPLATE_NAME:
@@ -108,6 +114,8 @@ def permission_denied(request, exception, template_name=ERROR_403_TEMPLATE_NAME)
     "403 Forbidden" (as per RFC 7231) will be returned.
     """
     try:
+        # 默认将获取名为 403.html 的 template，如果不存在该 template，
+        # 则有 django 使用 from_string 拼出一个 403 页面
         template = loader.get_template(template_name)
     except TemplateDoesNotExist:
         if template_name != ERROR_403_TEMPLATE_NAME:

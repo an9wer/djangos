@@ -13,3 +13,6 @@ db.sqlite3
 
 # media file
 media
+
+# local settings
+settings.conf

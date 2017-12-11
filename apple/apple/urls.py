@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.root_view),
     url(r'^forms_frame/', include('forms_frame.urls')),
+    url(r'^view_layer/', include('view_layer.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
