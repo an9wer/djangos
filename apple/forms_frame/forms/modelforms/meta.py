@@ -49,6 +49,8 @@ class OverrideFieldsFrom(forms.ModelForm):
         fields = ["one", "two", "three"]
 
         # customize field widgets
+        # The widgets dictionary accepts either widget instances
+        # (e.g., Textarea(...)) or classes (e.g., Textarea).
         widgets = {
             "one": forms.Textarea(attrs={"cols": 80, "row": 20}),
         }
