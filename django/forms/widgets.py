@@ -159,7 +159,9 @@ class MediaDefiningClass(type):
         return new_class
 
 
+# MediaDefiningClass 和 RenameMethodsBase 都是 metaclass
 class RenameWidgetMethods(MediaDefiningClass, RenameMethodsBase):
+    # renamed_methods 重定义了 RenameMethodsBase 的同名属性
     renamed_methods = (
         ('_format_value', 'format_value', RemovedInDjango20Warning),
     )

@@ -44,6 +44,8 @@ class RenameMethodsBase(type):
     See #15363 for more details.
     """
 
+    # renamed_methods 是一个 tuple，包含三个元素：
+    # old_method_name, new_method_name, warning object
     renamed_methods = ()
 
     def __new__(cls, name, bases, attrs):
