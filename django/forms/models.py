@@ -43,8 +43,6 @@ def construct_instance(form, instance, fields=None, exclude=None):
     """
     from django.db import models
     opts = instance._meta
-    print opts
-    print opts.fields
 
     cleaned_data = form.cleaned_data
     file_field_list = []
@@ -393,10 +391,8 @@ class BaseModelForm(BaseForm):
                 exclude.append(name)
 
         try:
-            print self.instance.age
             # 在这里改变 instance 的值
             self.instance = construct_instance(self, self.instance, opts.fields, opts.exclude)
-            print self.instance.age
         except ValidationError as e:
             self._update_errors(e)
 

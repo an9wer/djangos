@@ -153,15 +153,16 @@ class MediaDefiningClass(type):
     def __new__(mcs, name, bases, attrs):
         new_class = super(MediaDefiningClass, mcs).__new__(mcs, name, bases, attrs)
 
+        ## 添加 media 属性（该属性作用详见 Form Assets 文档）
         if 'media' not in attrs:
             new_class.media = media_property(new_class)
 
         return new_class
 
 
-# MediaDefiningClass 和 RenameMethodsBase 都是 metaclass
+## MediaDefiningClass 和 RenameMethodsBase 都是 metaclass
 class RenameWidgetMethods(MediaDefiningClass, RenameMethodsBase):
-    # renamed_methods 重定义了 RenameMethodsBase 的同名属性
+    ## renamed_methods 重定义了 RenameMethodsBase 的同名属性
     renamed_methods = (
         ('_format_value', 'format_value', RemovedInDjango20Warning),
     )
@@ -173,12 +174,14 @@ class Widget(six.with_metaclass(RenameWidgetMethods)):
     is_required = False
     supports_microseconds = True
 
+    ## 注意：Widget 在实例化的时候只需要带上一个参数 attrs，且 attrs 是 dict object
     def __init__(self, attrs=None):
         if attrs is not None:
             self.attrs = attrs.copy()
         else:
             self.attrs = {}
 
+    ## 定义对 widget instance 调用 copy.deepcopy() 时的规则
     def __deepcopy__(self, memo):
         obj = copy.copy(self)
         obj.attrs = self.attrs.copy()
@@ -187,6 +190,7 @@ class Widget(six.with_metaclass(RenameWidgetMethods)):
 
     @property
     def is_hidden(self):
+        ## 当 widget instance 的 input_type 属性的值为 hidden 时，is_hidden 为 True
         return self.input_type == 'hidden' if hasattr(self, 'input_type') else False
 
     def subwidgets(self, name, value, attrs=None):
@@ -219,11 +223,14 @@ class Widget(six.with_metaclass(RenameWidgetMethods)):
         """
         Returns this Widget rendered as HTML, as a Unicode string.
         """
+        ## 在 render 的时候会传入 value
+        ## TODO: 这里的 name 是什么？
         context = self.get_context(name, value, attrs)
         return self._render(self.template_name, context, renderer)
 
     def _render(self, template_name, context, renderer=None):
         if renderer is None:
+            ## render 默认是 'django.forms.renderers.DjangoTemplates'
             renderer = get_default_renderer()
         return mark_safe(renderer.render(template_name, context))
 
@@ -234,6 +241,11 @@ class Widget(six.with_metaclass(RenameWidgetMethods)):
             attrs.update(extra_attrs)
         return attrs
 
+    ## value_from_datadict 在 BaseForm._clean_field() 中才被调用
+    ## The method extracts data from the POST dictionary and constructs and
+    ## validates the date. If it is valid, we return the string, otherwise,
+    ## we return an empty string which will cause form.is_valid to return False.
+    ## 也就是说 value_from_datadict 主要是获取页面上提交的数据给校验用
     def value_from_datadict(self, data, files, name):
         """
         Given a dictionary of data and this widget's name, returns the value
@@ -275,6 +287,7 @@ class Input(Widget):
 
     def get_context(self, name, value, attrs):
         context = super(Input, self).get_context(name, value, attrs)
+        ## 在 Widget 的 context 的基础上再加上 type
         context['widget']['type'] = self.input_type
         return context
 
@@ -796,15 +809,18 @@ class MultiWidget(Widget):
         # value is a list of values, each corresponding to a widget
         # in self.widgets.
         if not isinstance(value, list):
+            ## 在这里调用 decompress，获取拆分成 list 的 value
             value = self.decompress(value)
 
         final_attrs = context['widget']['attrs']
         input_type = final_attrs.pop('type', None)
         id_ = final_attrs.get('id')
         subwidgets = []
+        ## 获取 self.widgets 中每个 widget 的 value，然后添加到 subwidgets 中
         for i, widget in enumerate(self.widgets):
             if input_type is not None:
                 widget.input_type = input_type
+            ## subwidget 的 name 是 widget 的 name 加上 subwidget 的在 widgets 中的 index
             widget_name = '%s_%s' % (name, i)
             try:
                 widget_value = value[i]
@@ -816,6 +832,7 @@ class MultiWidget(Widget):
             else:
                 widget_attrs = final_attrs
             subwidgets.append(widget.get_context(widget_name, widget_value, widget_attrs)['widget'])
+        ## 将 subwidget 添加到 context 的 widget 中
         context['widget']['subwidgets'] = subwidgets
         return context
 
@@ -825,6 +842,7 @@ class MultiWidget(Widget):
         return id_
 
     def value_from_datadict(self, data, files, name):
+        ## 调用 subwidget 的 value_from_datadict method
         return [widget.value_from_datadict(data, files, name + '_%s' % i) for i, widget in enumerate(self.widgets)]
 
     def value_omitted_from_data(self, data, files, name):
@@ -833,6 +851,8 @@ class MultiWidget(Widget):
             for i, widget in enumerate(self.widgets)
         )
 
+    ## decompress 会在 MultiWidget.get_context() 和 MultiValueField.has_change()
+    ## 中被调用，decompress 主要作用是将 value 拆分成 list 然后 render 到页面上
     def decompress(self, value):
         """
         Returns a list of decompressed values for the given compressed value.

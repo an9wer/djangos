@@ -400,6 +400,7 @@ class BaseForm(object):
             if field.disabled:
                 value = self.get_initial_for_field(field, name)
             else:
+                ## 调用 widget 的 value_from_datadict 得到该 field 的值
                 value = field.widget.value_from_datadict(self.data, self.files, self.add_prefix(name))
             try:
                 # 调用 Field.clean(value) 

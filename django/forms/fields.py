@@ -1073,6 +1073,7 @@ class MultiValueField(Field):
             initial = ['' for x in range(0, len(data))]
         else:
             if not isinstance(initial, list):
+                ## 调用 widget 的 decompress method
                 initial = self.widget.decompress(initial)
         for field, initial, data in zip(self.fields, initial, data):
             try:

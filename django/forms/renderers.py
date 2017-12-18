@@ -27,6 +27,7 @@ class BaseRenderer(object):
     def get_template(self, template_name):
         raise NotImplementedError('subclasses must implement get_template()')
 
+    ## 实际调用的是 Template 的 render
     def render(self, template_name, context, request=None):
         template = self.get_template(template_name)
         return template.render(context, request=request).strip()

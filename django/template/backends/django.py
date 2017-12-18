@@ -60,6 +60,7 @@ class Template(object):
     def origin(self):
         return self.template.origin
 
+    ## 最终的 render
     def render(self, context=None, request=None):
         context = make_context(context, request, autoescape=self.backend.engine.autoescape)
         try:
