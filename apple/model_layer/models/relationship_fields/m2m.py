@@ -60,7 +60,7 @@ object set. Returns the newly created object.
 
 remove(*objs): Removes the specified model objects from the related object set.
 
-    >>> t1.objects.remove(s1, s2)   # 删除 t1 与 s1 和 s2 的关联
+    >>> t1.students.remove(s1, s2)   # 删除 t1 与 s1 和 s2 的关联
     >>> t1.students.all()
     <QuerySet []>
 
