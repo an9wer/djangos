@@ -391,7 +391,7 @@ class BaseModelForm(BaseForm):
                 exclude.append(name)
 
         try:
-            # 在这里改变 instance 的值
+            ## 在这里改变 instance 的值
             self.instance = construct_instance(self, self.instance, opts.fields, opts.exclude)
         except ValidationError as e:
             self._update_errors(e)

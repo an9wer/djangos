@@ -34,17 +34,20 @@ class DeclarativeFieldsMetaclass(MediaDefiningClass):
     """
     def __new__(mcs, name, bases, attrs):
         # Collect fields from current class.
+        ## 先获取自己的 declared_fields
         current_fields = []
         for key, value in list(attrs.items()):
             if isinstance(value, Field):
                 current_fields.append((key, value))
                 attrs.pop(key)
+        ## 按照 creation_counter 对定义的 fields 进行排序
         current_fields.sort(key=lambda x: x[1].creation_counter)
         attrs['declared_fields'] = OrderedDict(current_fields)
 
         new_class = super(DeclarativeFieldsMetaclass, mcs).__new__(mcs, name, bases, attrs)
 
         # Walk through the MRO.
+        ## 然后从所有继承的父类中获取 declared_fields
         declared_fields = OrderedDict()
         for base in reversed(new_class.__mro__):
             # Collect fields from base class.
@@ -56,6 +59,16 @@ class DeclarativeFieldsMetaclass(MediaDefiningClass):
                 if value is None and attr in declared_fields:
                     declared_fields.pop(attr)
 
+        ## declared_fields 是一个 dict
+        ## 其 key 是 attribute 的 name，其 value 是 attribute 的 value
+        ##
+        ## 例如：
+        ##
+        ##     class SomeForm(forms.Form):
+        ##         username = forms.CharField()
+        ## 
+        ##     则 declared_fields = {"username": forms.CharField()}
+        ##
         new_class.base_fields = declared_fields
         new_class.declared_fields = declared_fields
 
@@ -385,13 +398,16 @@ class BaseForm(object):
         if self.empty_permitted and not self.has_changed():
             return
 
-        # 先 clean fields
+        ## 先 clean fields
         self._clean_fields()
-        # 然后 clean form
+        ## 然后 clean form
         self._clean_form()
-        # ?
+        ## 最后如果是 ModelForm，还需要继续对 cleaned_data 进行校验
         self._post_clean()
 
+    ## 该 method 主要是对所有的 field 进行校验，会调用每个 field 的 clean()，
+    ## 一旦捕获到了 Field.clean() 中抛出的 ValidationError，则将其添加到
+    ## self._errors 中，然后继续进行下一个 field 的校验。
     def _clean_fields(self):
         for name, field in self.fields.items():
             # value_from_datadict() gets the data from the data dictionaries.
@@ -403,7 +419,7 @@ class BaseForm(object):
                 ## 调用 widget 的 value_from_datadict 得到该 field 的值
                 value = field.widget.value_from_datadict(self.data, self.files, self.add_prefix(name))
             try:
-                # 调用 Field.clean(value) 
+                ## 调用 Field.clean(value) 
                 if isinstance(field, FileField):
                     initial = self.get_initial_for_field(field, name)
                     value = field.clean(value, initial)
@@ -411,20 +427,23 @@ class BaseForm(object):
                     value = field.clean(value)
                 self.cleaned_data[name] = value
 
-                # 调用 clean_<fieldname>()
+                ## 调用 clean_<fieldname>()
                 if hasattr(self, 'clean_%s' % name):
                     value = getattr(self, 'clean_%s' % name)()
                     self.cleaned_data[name] = value
             except ValidationError as e:
-                # 将 ValidationError 添加到指定的 name 中
+                ## 这里会捕获 ValidationError 并将其添加到 self._errors 中
                 self.add_error(name, e)
 
+    ## 该 method 主要对 form 进行校验，会调用 Form.clean()
+    ## 一旦捕获到了 Form.clean() 中抛出的 ValidationError，则将其添加到 
+    ## self._errors 中
     def _clean_form(self):
         try:
-            # 调用 Form.clean()
+            ## 调用 Form.clean()
             cleaned_data = self.clean()
         except ValidationError as e:
-            # 将 ValidationError 添加到 NON_FIELD_ERRORS 中
+            ## 将 ValidationError 添加到 NON_FIELD_ERRORS 中
             self.add_error(None, e)
         else:
             if cleaned_data is not None:

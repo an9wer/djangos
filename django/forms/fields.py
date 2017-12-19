@@ -116,6 +116,7 @@ class Field(object):
         self.creation_counter = Field.creation_counter
         Field.creation_counter += 1
 
+        ## 搜集所有父类的 default_error_messages 以及 self.error_message
         messages = {}
         for c in reversed(self.__class__.__mro__):
             messages.update(getattr(c, 'default_error_messages', {}))
@@ -129,13 +130,19 @@ class Field(object):
     def prepare_value(self, value):
         return value
 
+    ## field validation 的第一步
+    ## 注意：这一步要么返回返回 value，要么 raise ValidationError
     def to_python(self, value):
         return value
 
+    ## field validation 的第二步
+    ## 注意：这一步不会返回任何值，只会 raise ValidationError
     def validate(self, value):
         if value in self.empty_values and self.required:
             raise ValidationError(self.error_messages['required'], code='required')
 
+    ## field validation 的第三步
+    ## 注意：这一步不会返回任何值，只会 raise ValidationError
     def run_validators(self, value):
         if value in self.empty_values:
             return
@@ -150,6 +157,8 @@ class Field(object):
         if errors:
             raise ValidationError(errors)
 
+    ## 调用三步校验
+    ## 只有 to_python() 才返回 value，且 clean() 返回的就是 to_python() 得到的值
     def clean(self, value):
         """
         Validates the given value and returns its "cleaned" value as an
