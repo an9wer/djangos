@@ -108,10 +108,17 @@ class ValidationError(Exception):
         list or dictionary can be an actual `list` or `dict` or an instance
         of ValidationError with its `error_list` or `error_dict` attribute set.
         """
+        ## 参数 message 可以是 ValidationError instance, list object, dict 
+        ## object which maps field names to list of errors（也就是说 message
+        ## 如果是 dict 对象，其 value 是一个 list），可以通过 ValidationError
+        ## 的 error_dict 或者 error_list 属性分别得到 actual dict or list
 
         # PY2 can't pickle naive exception: http://bugs.python.org/issue1692335.
         super(ValidationError, self).__init__(message, code, params)
 
+        ## message 如果是 ValidationError 的实例对象，则获取其 error_dict 属性
+        ## 的值，如果其没有 error_dict 属性，则获取其 error_list 属性的值，如果
+        ## 其没有 error_list 属性，则获取其 message 属性的值
         if isinstance(message, ValidationError):
             if hasattr(message, 'error_dict'):
                 message = message.error_dict
@@ -123,6 +130,9 @@ class ValidationError(Exception):
             else:
                 message, code, params = message.message, message.code, message.params
 
+        ## message 如果是 dict 对象，将其 item 逐个存入 self.error_dict 中，
+        ## self.error_dict 的 key 是对应 message 的 key，value 是 message 的
+        ## value 转化成 ValidationError 实例对象后的 error_list 属性的值
         if isinstance(message, dict):
             self.error_dict = {}
             for field, messages in message.items():
@@ -130,6 +140,8 @@ class ValidationError(Exception):
                     messages = ValidationError(messages)
                 self.error_dict[field] = messages.error_list
 
+        ## message 如果是 list 对象，将其 item 的逐个转化成 ValidationError 的
+        ## 实例对象后添加到 self.error_list 中
         elif isinstance(message, list):
             self.error_list = []
             for message in message:
@@ -137,10 +149,12 @@ class ValidationError(Exception):
                 if not isinstance(message, ValidationError):
                     message = ValidationError(message)
                 if hasattr(message, 'error_dict'):
+                    ## TODO: 这里的 sum 的作用？
                     self.error_list.extend(sum(message.error_dict.values(), []))
                 else:
                     self.error_list.extend(message.error_list)
 
+        ## message 如果是 str 对象，注意：一定会有 error_list 属性，且是其自己
         else:
             self.message = message
             self.code = code
