@@ -189,6 +189,7 @@ def fields_for_model(model, fields=None, exclude=None, widgets=None,
     return field_dict
 
 
+## 定义了 ModelForm 的 class Meta 的所有属性
 class ModelFormOptions(object):
     def __init__(self, options=None):
         self.model = getattr(options, 'model', None)
@@ -217,11 +218,13 @@ class ModelFormMetaclass(DeclarativeFieldsMetaclass):
         if bases == (BaseModelForm,):
             return new_class
 
+        ## 获取 ModelForm 中的 class Meta
         opts = new_class._meta = ModelFormOptions(getattr(new_class, 'Meta', None))
 
         # We check if a string was passed to `fields` or `exclude`,
         # which is likely to be a mistake where the user typed ('foo') instead
         # of ('foo',)
+        ## 校验 fields, exclude, localized_fields，这三个值不能为 str 类型
         for opt in ['fields', 'exclude', 'localized_fields']:
             value = getattr(opts, opt)
             if isinstance(value, six.string_types) and value != ALL_FIELDS:
@@ -235,6 +238,8 @@ class ModelFormMetaclass(DeclarativeFieldsMetaclass):
 
         if opts.model:
             # If a model is defined, extract form fields from it.
+            ## 如果 class Meta 中定义了 model 属性，则其必须还要有
+            ## fields 或者 exclude 属性
             if opts.fields is None and opts.exclude is None:
                 raise ImproperlyConfigured(
                     "Creating a ModelForm without either the 'fields' attribute "
