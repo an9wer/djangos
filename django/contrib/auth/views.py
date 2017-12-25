@@ -416,8 +416,10 @@ class PasswordResetView(PasswordContextMixin, FormView):
 
     @method_decorator(csrf_protect)
     def dispatch(self, *args, **kwargs):
+        ## 调用 django.views.generic.base 中的 View.dispatch()
         return super(PasswordResetView, self).dispatch(*args, **kwargs)
 
+    ## form.is_valid() 为 True 时，会调用该 method
     def form_valid(self, form):
         opts = {
             'use_https': self.request.is_secure(),
@@ -430,6 +432,8 @@ class PasswordResetView(PasswordContextMixin, FormView):
             'extra_email_context': self.extra_email_context,
         }
         form.save(**opts)
+        ## 调用 django.views.genderic.edit 中的 FormMixin.form_valid()
+        ## 跳转到 self.success_url
         return super(PasswordResetView, self).form_valid(form)
 
 
@@ -454,20 +458,25 @@ class PasswordResetConfirmView(PasswordContextMixin, FormView):
     @method_decorator(sensitive_post_parameters())
     @method_decorator(never_cache)
     def dispatch(self, *args, **kwargs):
+        ## uidb64 和 token 来自 url 的 kwargs
         assert 'uidb64' in kwargs and 'token' in kwargs
 
         self.validlink = False
+        ## 通过 uidb64 得到 User object
         self.user = self.get_user(kwargs['uidb64'])
 
         if self.user is not None:
             token = kwargs['token']
             if token == INTERNAL_RESET_URL_TOKEN:
+                ## 重定向之后，验证 user 和 session 中的 token 是否正确
                 session_token = self.request.session.get(INTERNAL_RESET_SESSION_TOKEN)
                 if self.token_generator.check_token(self.user, session_token):
                     # If the token is valid, display the password reset form.
                     self.validlink = True
                     return super(PasswordResetConfirmView, self).dispatch(*args, **kwargs)
             else:
+                ## 验证 user 和 token 是否正确，如果正确会将 token 塞入 session
+                ## 然后进行一次重定向
                 if self.token_generator.check_token(self.user, token):
                     # Store the token in the session and redirect to the
                     # password reset form at a URL without the token. That
@@ -480,6 +489,7 @@ class PasswordResetConfirmView(PasswordContextMixin, FormView):
         # Display the "Password reset unsuccessful" page.
         return self.render_to_response(self.get_context_data())
 
+    ## 通过 uidb64 参数的值得到 User object
     def get_user(self, uidb64):
         try:
             # urlsafe_base64_decode() decodes to bytestring on Python 3
@@ -496,9 +506,12 @@ class PasswordResetConfirmView(PasswordContextMixin, FormView):
 
     def form_valid(self, form):
         user = form.save()
+        ## 删除 token cookie
         del self.request.session[INTERNAL_RESET_SESSION_TOKEN]
         if self.post_reset_login:
             auth_login(self.request, user, self.post_reset_login_backend)
+        ## 调用 FormMixin class 的 form_valid() method
+        ## 跳转到 self.successful_url
         return super(PasswordResetConfirmView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):

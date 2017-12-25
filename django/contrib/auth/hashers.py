@@ -79,6 +79,7 @@ def make_password(password, salt=None, hasher='default'):
     hasher = get_hasher(hasher)
 
     if not salt:
+        ## 返回的是一个随机数
         salt = hasher.salt()
 
     return hasher.encode(password, salt)
@@ -257,6 +258,19 @@ class PBKDF2PasswordHasher(BasePasswordHasher):
             iterations = self.iterations
         hash = pbkdf2(password, salt, iterations, digest=self.digest)
         hash = base64.b64encode(hash).decode('ascii').strip()
+        ## 对密码进行编码后的形式是：加密算法%迭代次数%随机盐%加密值
+        ## 例如：
+        ##
+        ## 使用：
+        ## make_password('some_password', salt='some_salt', hasher=PBKDF2PasswordHasher()))
+        ## 得到：
+        ## pbkdf2_sha256$36000$some_salt$rEbvolOROpXmfqkQ/8gTGPR/iMSZUZlEYmDPvjH/4BQ=
+        ##
+        ## 使用：
+        ## base64.b64encode(hashlib.pbkdf2_hmac('sha256', b'some_password', b'some_salt', 36000)))
+        ## 得到：
+        ## rEbvolOROpXmfqkQ/8gTGPR/iMSZUZlEYmDPvjH/4BQ=
+        ## 可以发现该结果与 make_password 得到的加密值部分相同
         return "%s$%d$%s$%s" % (self.algorithm, iterations, salt, hash)
 
     def verify(self, password, encoded):

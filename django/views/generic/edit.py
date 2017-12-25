@@ -42,6 +42,7 @@ class FormMixin(ContextMixin):
         """
         if form_class is None:
             form_class = self.get_form_class()
+        ## 返回一个实例化后的 form
         return form_class(**self.get_form_kwargs())
 
     def get_form_kwargs(self):
@@ -76,7 +77,7 @@ class FormMixin(ContextMixin):
         """
         If the form is valid, redirect to the supplied URL.
         """
-        # 跳转到 success_url
+        # 跳转到 self.success_url
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
@@ -90,8 +91,11 @@ class FormMixin(ContextMixin):
         """
         Insert the form into the context dict.
         """
+        ## 将实例化后的 form 绑定到 form 置入 kwargs
         if 'form' not in kwargs:
             kwargs['form'] = self.get_form()
+        ## 调用 ContextMixin.get_context_data()，将 self 绑定到 view 置入
+        ## kwargs，并返回 kwargs
         return super(FormMixin, self).get_context_data(**kwargs)
 
 
@@ -179,6 +183,7 @@ class ProcessFormView(View):
         Handles POST requests, instantiating a form instance with the passed
         POST variables and then checked for validity.
         """
+        ## 获取 form class 并验证
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)

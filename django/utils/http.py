@@ -236,6 +236,7 @@ def urlsafe_base64_encode(s):
     Encodes a bytestring in base64 for use in URLs, stripping any trailing
     equal signs.
     """
+    ## base64 编码后舍弃多余的 '='
     return base64.urlsafe_b64encode(s).rstrip(b'\n=')
 
 
@@ -246,6 +247,7 @@ def urlsafe_base64_decode(s):
     """
     s = force_bytes(s)
     try:
+        ## 补足和 trailing signs 相等的 '=' 然后进行 base64 解码
         return base64.urlsafe_b64decode(s.ljust(len(s) + len(s) % 4, b'='))
     except (LookupError, BinasciiError) as e:
         raise ValueError(e)

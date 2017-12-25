@@ -13,6 +13,7 @@ class PasswordResetTokenGenerator(object):
     """
     key_salt = "django.contrib.auth.tokens.PasswordResetTokenGenerator"
 
+    ## 参数 user 是 User object
     def make_token(self, user):
         """
         Returns a token that can be used once to do a password reset
@@ -74,6 +75,7 @@ class PasswordResetTokenGenerator(object):
         )
 
     def _num_days(self, dt):
+        ## return the number of days since 2001-1-1
         return (dt - date(2001, 1, 1)).days
 
     def _today(self):

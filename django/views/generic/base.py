@@ -45,6 +45,7 @@ class View(object):
         for key, value in six.iteritems(kwargs):
             setattr(self, key, value)
 
+    ## 返回 view function
     @classonlymethod
     def as_view(cls, **initkwargs):
         """
@@ -89,7 +90,7 @@ class View(object):
             handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
         else:
             handler = self.http_method_not_allowed
-        # 调用 POST() GET() 等
+        ## 调用 self.post(), self.get() 等
         return handler(request, *args, **kwargs)
 
     def http_method_not_allowed(self, request, *args, **kwargs):
