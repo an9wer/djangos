@@ -1,23 +1,15 @@
+# Django 1.11.2 source code notes
+
+## Usage
+
+-   ln -s %PATH_TO%django %PATH_TO%apple/django
+
 ### TODO
-
--   password validation
-
--   permissions
-
--   forms.ChoiceField()
-
--   model Meta default_permissions
 
 -   ForeignKey(add, create, clear, remove, set)
 
--   settings 中 ADMINS 发送 email
-
--   django.core.exceptions
-
--   django.http     (HttpResponse, HttpResponseForbidden, HttpResponseNotFound)
-
--   django.utils.html   (template_html)
-
--   models.ImageField
-
 -   signal
+
+-   settings TEMPLATES["DIRS"]
+
+-   settings EMAIL

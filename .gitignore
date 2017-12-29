@@ -16,3 +16,6 @@ media
 
 # local settings
 settings.conf
+
+# symbolic link
+apple/django

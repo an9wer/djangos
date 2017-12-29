@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'forms_frame',
-    'authentication_tool',
+    'auth_tool',
     'model_layer',
     'admin_site',
     'migrations_tool',
@@ -60,7 +60,7 @@ ROOT_URLCONF = 'apple.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['auth_tool/templates'],    # 使 auth_tool 中的 templates 优先于 django.contrib.admin 中的 templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
