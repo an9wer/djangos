@@ -44,6 +44,8 @@ class SessionMiddleware(MiddlewareMixin):
                 if accessed:
                     patch_vary_headers(response, ('Cookie',))
                 if (modified or settings.SESSION_SAVE_EVERY_REQUEST) and not empty:
+                    ## 将 expires 和 max_age 设置成 None，cookie 会在
+                    ## 浏览器关闭前自动清除
                     if request.session.get_expire_at_browser_close():
                         max_age = None
                         expires = None
