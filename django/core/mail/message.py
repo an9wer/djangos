@@ -466,6 +466,7 @@ class EmailMessage(object):
         return attachment
 
 
+## 相比于 EmailMessage 多出了一个 alternatives 属性
 class EmailMultiAlternatives(EmailMessage):
     """
     A version of EmailMessage that makes it easy to send multipart/alternative
@@ -491,6 +492,7 @@ class EmailMultiAlternatives(EmailMessage):
         )
         self.alternatives = alternatives or []
 
+    ## 把内容附加到 alternatives 中
     def attach_alternative(self, content, mimetype):
         """Attach an alternative content representation."""
         assert content is not None
@@ -500,6 +502,10 @@ class EmailMultiAlternatives(EmailMessage):
     def _create_message(self, msg):
         return self._create_attachments(self._create_alternatives(msg))
 
+    ## 使用 qq, 163, gmail 测试发现邮件一旦附加了 alternative，则原先 self.body
+    ## 中的内容会被覆盖，且如果有多个 alternative 进行附加，在 qq 中会显示所有
+    ## 附加的 alternative，在 163 中只会显示第一个附加的 alternative，其他的
+    ## alternative 都会变成 附件，在 gmail 中只会显示最后一个 alternative
     def _create_alternatives(self, msg):
         encoding = self.encoding or settings.DEFAULT_CHARSET
         if self.alternatives:
@@ -507,6 +513,10 @@ class EmailMultiAlternatives(EmailMessage):
             msg = SafeMIMEMultipart(_subtype=self.alternative_subtype, encoding=encoding)
             if self.body:
                 msg.attach(body_msg)
+            ## self.alternatives 的形式形如：
+            ##    [('<h1>addition alternatives</h1>\n', 'text/html'),
+            ##     ('<h2>addition alternatives</h2>\n', 'text/html'),
+            ##     ('<h3>addition alternatives</h3>\n', 'text/html')]
             for alternative in self.alternatives:
                 msg.attach(self._create_mime_attachment(*alternative))
         return msg

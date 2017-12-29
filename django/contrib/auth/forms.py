@@ -233,9 +233,12 @@ class PasswordResetForm(forms.Form):
         subject = loader.render_to_string(subject_template_name, context)
         # Email subject *must not* contain newlines
         subject = ''.join(subject.splitlines())
+        ## email message 的内容默认是 registration/password_reset_email.html 中
+        ## 经过 django.template 渲染过的内容，其格式是 text/plain
         body = loader.render_to_string(email_template_name, context)
 
         email_message = EmailMultiAlternatives(subject, body, from_email, [to_email])
+        ## 附加 text/html 格式的内容到 email message 中
         if html_email_template_name is not None:
             html_email = loader.render_to_string(html_email_template_name, context)
             email_message.attach_alternative(html_email, 'text/html')

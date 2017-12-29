@@ -81,6 +81,7 @@ class LoginView(SuccessURLAllowedHostsMixin, FormView):
     @method_decorator(csrf_protect)
     @method_decorator(never_cache)
     def dispatch(self, request, *args, **kwargs):
+        ## 是否对已经登录认证的用户进行重定向到 success_url
         if self.redirect_authenticated_user and self.request.user.is_authenticated:
             redirect_to = self.get_success_url()
             if redirect_to == self.request.path:
@@ -409,6 +410,8 @@ class PasswordResetView(PasswordContextMixin, FormView):
     from_email = None
     html_email_template_name = None
     subject_template_name = 'registration/password_reset_subject.txt'
+    ## 这里要求 PasswordResetDoneView 的 url name 为 password_reset_done
+    ## 否则不能找到该 view function
     success_url = reverse_lazy('password_reset_done')
     template_name = 'registration/password_reset_form.html'
     title = _('Password reset')
@@ -450,6 +453,8 @@ class PasswordResetConfirmView(PasswordContextMixin, FormView):
     form_class = SetPasswordForm
     post_reset_login = False
     post_reset_login_backend = None
+    ## 这里要求 PasswordResetCompleteView 的 url name 为 password_reset_complete
+    ## 否则不能找到该 view function
     success_url = reverse_lazy('password_reset_complete')
     template_name = 'registration/password_reset_confirm.html'
     title = _('Enter new password')
@@ -592,6 +597,8 @@ def password_change_done(request,
 
 class PasswordChangeView(PasswordContextMixin, FormView):
     form_class = PasswordChangeForm
+    ## 这里要求 PasswordChangeDoneView 的 url name 为 password_change_done
+    ## 否则不能找到该 view function
     success_url = reverse_lazy('password_change_done')
     template_name = 'registration/password_change_form.html'
     title = _('Password change')
