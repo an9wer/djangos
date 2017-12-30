@@ -50,11 +50,14 @@ class Field(object):
     widget = TextInput  # Default widget to use when rendering this type of Field.
     hidden_widget = HiddenInput  # Default widget to use when rendering this as "hidden".
     default_validators = []  # Default set of validators
+    ## 可以在 default_error_messages 中添加 invalid，主要用于 to_python() 和
+    ## validate() 中校验发现问题时 raise 的 ValidationError
     # Add an 'invalid' entry to default_error_message if you want a specific
     # field error message not raised by the field validators.
     default_error_messages = {
         'required': _('This field is required.'),
     }
+    ## EMPTY_VALUES = (None, '', [], (), {})
     empty_values = list(validators.EMPTY_VALUES)
 
     # Tracks each time a Field instance is created. Used to retain order.
@@ -102,9 +105,12 @@ class Field(object):
         if self.localize:
             widget.is_localized = True
 
+        ## 这里 Field instance 的 required 属性会覆盖 Widget instance 的
+        ## is_required 属性
         # Let the widget know whether it should display as required.
         widget.is_required = self.required
 
+        ## 获取 Widget instance 中定义的 attrs
         # Hook into self.widget_attrs() for any Field-specific HTML attributes.
         extra_attrs = self.widget_attrs(widget)
         if extra_attrs:
@@ -149,8 +155,11 @@ class Field(object):
         errors = []
         for v in self.validators:
             try:
+                ## 使用 validator 对 value 进行校验
                 v(value)
             except ValidationError as e:
+                ## 判断 ValidationError 是否有 code 属性，
+                ## 且该属性的值是否存在于 self.error_messages 中
                 if hasattr(e, 'code') and e.code in self.error_messages:
                     e.message = self.error_messages[e.code]
                 errors.extend(e.error_list)
@@ -993,6 +1002,8 @@ class MultiValueField(Field):
         'incomplete': _('Enter a complete value.'),
     }
 
+    ## MultiValueField 比 Field 多了 fields 和 require_all_fields 参数
+    ## fields 中包含了 Field instance
     def __init__(self, fields=(), *args, **kwargs):
         self.require_all_fields = kwargs.pop('require_all_fields', True)
         super(MultiValueField, self).__init__(*args, **kwargs)
@@ -1026,19 +1037,26 @@ class MultiValueField(Field):
         clean_data = []
         errors = []
         if not value or isinstance(value, (list, tuple)):
+            ## 如果 value 是空 list 或者空 tuple
             if not value or not [v for v in value if v not in self.empty_values]:
                 if self.required:
                     raise ValidationError(self.error_messages['required'], code='required')
                 else:
                     return self.compress([])
         else:
+            ## 如果 value 不是 None, '', [], (), {}, 也不是 list 和 tuple 的
+            ## 实例对象(这样的 value 可能是非空字符串或者非空 dict)
             raise ValidationError(self.error_messages['invalid'], code='invalid')
+        ## 如果 value 是非空 list 或者非空 tuple，将其与 self.fields 中的
+        ## 各个 field 对应起来
         for i, field in enumerate(self.fields):
             try:
                 field_value = value[i]
             except IndexError:
                 field_value = None
             if field_value in self.empty_values:
+                ## self.require_all_fields 为 True 要求 fields 中所有的
+                ## filed 的值不能为空
                 if self.require_all_fields:
                     # Raise a 'required' error if the MultiValueField is
                     # required and any field is empty.
@@ -1061,8 +1079,11 @@ class MultiValueField(Field):
         if errors:
             raise ValidationError(errors)
 
+        ## 如果所有的校验都没有发现错误，则调用 compress()
         out = self.compress(clean_data)
+        ## 然后调用 self.validate() 进行校验
         self.validate(out)
+        ## 最后调用 self.run_validators() 进行校验
         self.run_validators(out)
         return out
 
