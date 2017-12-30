@@ -1,6 +1,8 @@
 from .forms import *
 
 url_form = {
+    "/forms_frame/fields/multivalue/": NameMultiValueForm,
+
     "/forms_frame/modelforms/partfields/": PartFieldsForm,
     "/forms_frame/modelforms/allfields/": AllFieldsForm,
     "/forms_frame/modelforms/excludefields/": ExcludeFieldsForm,

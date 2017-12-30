@@ -2,7 +2,7 @@ from .multiplechoice import MultipleChoiceForm
 from .file import FileForm, MultipleFileForm, ClearFileForm
 from .modelchoice import ModelChoiceForm
 from .modelmultiplechoice import ModelMultipleChoiceForm
-
+from .multivalue import NameMultiValueForm, NameMultivaleWidget
 
 """
 Although the primary way you’ll use Field classes is in Form classes, you can

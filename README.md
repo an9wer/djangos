@@ -2,7 +2,7 @@
 
 ## Usage
 
--   ln -s %PATH_TO%django %PATH_TO%apple/django
+    ln -s /path/to/django /path/to/apple/django
 
 ### TODO
 
