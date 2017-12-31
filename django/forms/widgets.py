@@ -219,12 +219,11 @@ class Widget(six.with_metaclass(RenameWidgetMethods)):
         }
         return context
 
+    ## render 会调用 get_context() 获取 context，然后再调用 _render()
     def render(self, name, value, attrs=None, renderer=None):
         """
         Returns this Widget rendered as HTML, as a Unicode string.
         """
-        ## 在 render 的时候会传入 value
-        ## TODO: 这里的 name 是什么？
         context = self.get_context(name, value, attrs)
         return self._render(self.template_name, context, renderer)
 

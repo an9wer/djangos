@@ -90,9 +90,11 @@ class JSONSerializer(object):
     signing.loads.
     """
     def dumps(self, obj):
+        ## dumps 的同时编码成二进制内容
         return json.dumps(obj, separators=(',', ':')).encode('latin-1')
 
     def loads(self, data):
+        ## 解码成 latin-1 后 loads
         return json.loads(data.decode('latin-1'))
 
 
@@ -160,6 +162,7 @@ class Signer(object):
                 'Unsafe Signer separator: %r (cannot be empty or consist of '
                 'only A-z0-9-_=)' % sep,
             )
+        ## self.salt 默认为 "django.core.signing.Signer"
         self.salt = force_str(salt or '%s.%s' % (self.__class__.__module__, self.__class__.__name__))
 
     def signature(self, value):
@@ -167,6 +170,8 @@ class Signer(object):
         # Convert the signature from bytes to str only on Python 3
         return force_str(signature)
 
+    ## >>> Signer('secret').sign('words')
+    ## 'words:h53v8KmLMw9p77-mScqjRZOYLR8'
     def sign(self, value):
         value = force_str(value)
         return str('%s%s%s') % (value, self.sep, self.signature(value))
@@ -184,11 +189,15 @@ class Signer(object):
 class TimestampSigner(Signer):
 
     def timestamp(self):
+        ## 使用 baseconv.base62 对时间进行编码
         return baseconv.base62.encode(int(time.time()))
 
+    ## >>> TimestampSigner('secret').sign('words')
+    ## 'words:1eVcmZ:knPFXPWEIxT1h9PA4vUrcEHG9Kw'
     def sign(self, value):
         value = force_str(value)
         value = str('%s%s%s') % (value, self.sep, self.timestamp())
+        ## 是对 value, sep 和 timestamp 一起做一个签名
         return super(TimestampSigner, self).sign(value)
 
     def unsign(self, value, max_age=None):
