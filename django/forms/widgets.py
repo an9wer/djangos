@@ -815,7 +815,7 @@ class MultiWidget(Widget):
         input_type = final_attrs.pop('type', None)
         id_ = final_attrs.get('id')
         subwidgets = []
-        ## 获取 self.widgets 中每个 widget 的 value，然后添加到 subwidgets 中
+        ## 获取 self.widgets 中每个 widget 的 value，然后对应到各个 subwidgets 中
         for i, widget in enumerate(self.widgets):
             if input_type is not None:
                 widget.input_type = input_type
@@ -850,7 +850,7 @@ class MultiWidget(Widget):
             for i, widget in enumerate(self.widgets)
         )
 
-    ## decompress 会在 MultiWidget.get_context() 和 MultiValueField.has_change()
+    ## decompress 会在 MultiWidget.get_context() 和 MultiValueField.has_changed()
     ## 中被调用，decompress 主要作用是将 value 拆分成 list 然后 render 到页面上
     def decompress(self, value):
         """

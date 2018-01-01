@@ -222,6 +222,7 @@ class BoundField(object):
         Calculates and returns the ID attribute for this BoundField, if the
         associated Form has specified auto_id. Returns an empty string otherwise.
         """
+        ## form.auto_id 默认是 "id_%s"
         auto_id = self.form.auto_id
         if auto_id and '%s' in force_text(auto_id):
             return force_text(auto_id) % self.html_name
