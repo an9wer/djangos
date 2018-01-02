@@ -807,8 +807,9 @@ class MultiWidget(Widget):
                 widget.is_localized = self.is_localized
         # value is a list of values, each corresponding to a widget
         # in self.widgets.
+        ## 只有 value 不是 list 的时候才会调用 decompress，
+        ## 获取拆分成 list 的 value
         if not isinstance(value, list):
-            ## 在这里调用 decompress，获取拆分成 list 的 value
             value = self.decompress(value)
 
         final_attrs = context['widget']['attrs']

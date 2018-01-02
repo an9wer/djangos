@@ -243,6 +243,7 @@ def get_valid_filename(s):
     >>> get_valid_filename("john's portrait in 2004.jpg")
     'johns_portrait_in_2004.jpg'
     """
+    ## 默认使用 utf-8 对 name 进行解码，保证得到的是 unicode
     s = force_text(s).strip().replace(' ', '_')
     return re.sub(r'(?u)[^-\w.]', '', s)
 

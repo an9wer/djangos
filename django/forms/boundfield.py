@@ -120,6 +120,7 @@ class BoundField(object):
                 'It will be mandatory in Django 2.1.' % widget.__class__,
                 RemovedInDjango21Warning, stacklevel=2,
             )
+        ## 调用 Widget 的 render()
         html = widget.render(
             name=name,
             value=self.value(),
@@ -151,6 +152,8 @@ class BoundField(object):
         """
         return self.field.widget.value_from_datadict(self.form.data, self.form.files, self.html_name)
 
+    ## 如果是 bound form，则 value 是 bound data
+    ## 如果是 unbound form，则 value 是 prepare data
     def value(self):
         """
         Returns the value for this BoundField, using the initial value if

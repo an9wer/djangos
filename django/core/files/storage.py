@@ -60,6 +60,8 @@ class Storage(object):
         Returns a filename, based on the provided filename, that's suitable for
         use in the target storage system.
         """
+        ## 调用 django.utils.text 中的 get_valid_filename，
+        ## 默认使用 utf-8 对 name 进行解码，保证得到的是 unicode
         return get_valid_filename(name)
 
     def get_available_name(self, name, max_length=None):
