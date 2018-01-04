@@ -96,15 +96,22 @@ class ModelBase(type):
         classcell = attrs.pop('__classcell__', None)
         if classcell is not None:
             new_attrs['__classcell__'] = classcell
-        # 这里调用 type.__new__(cls, name, bases, new_attrs)
-        # 并且返回一个新的对象 new_calss
+        ## 这里调用 type.__new__(cls, name, bases, new_attrs)
+        ## 并且返回一个新的对象 new_class
+        ## 注意：这里的 new_class 指的不是 Model，而是继承自 Model 的子 class
         new_class = super_new(cls, name, bases, new_attrs)
+        ## attr_meta 是从 attrs 中获取的 Meta
         attr_meta = attrs.pop('Meta', None)
         abstract = getattr(attr_meta, 'abstract', False)
+        ## meta 的值和 attr_meta 的值相同，如果 attr_meta 为 None
+        ## 则 meta 是 new_class 中的 Meta 属性
+        ## 这种情况存在于 new_class (子类) 没有定义 Meta 属性，需要从
+        ## new_class 的父类中获取 Meta 属性
         if not attr_meta:
             meta = getattr(new_class, 'Meta', None)
         else:
             meta = attr_meta
+        ## base_meta 是 new_class 中的 _meta 属性
         base_meta = getattr(new_class, '_meta', None)
 
         app_label = None
@@ -124,6 +131,7 @@ class ModelBase(type):
             else:
                 app_label = app_config.label
 
+        ## 为 new_class 添加 _meta 属性
         new_class.add_to_class('_meta', Options(meta, app_label))
         if not abstract:
             new_class.add_to_class(
@@ -160,6 +168,7 @@ class ModelBase(type):
         if is_proxy and base_meta and base_meta.swapped:
             raise TypeError("%s cannot proxy the swapped model '%s'." % (name, base_meta.swapped))
 
+        ## 将参数 attrs 中包含的所有属性添加到 new_class 中
         # Add all attributes to the class.
         for obj_name, obj in attrs.items():
             new_class.add_to_class(obj_name, obj)
@@ -363,6 +372,8 @@ class ModelBase(type):
         if get_absolute_url_override:
             setattr(cls, 'get_absolute_url', get_absolute_url_override)
 
+        ## objects 是 class Manager 的实例对象，而 class Manager 继承自
+        ## BaseManagereFromQuerySet(约等于 QuerySet)
         if not opts.managers or cls._requires_legacy_default_manager():
             if any(f.name == 'objects' for f in opts.fields):
                 raise ValueError(
@@ -469,6 +480,7 @@ class ModelState(object):
         self.adding = True
 
 
+## Model 不能实例化，只能作为父类给子类继承，父类中的 metaclass 也会作用于其子类
 class Model(six.with_metaclass(ModelBase)):
 
     def __init__(self, *args, **kwargs):

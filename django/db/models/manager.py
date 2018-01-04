@@ -104,6 +104,7 @@ class BaseManager(object):
 
     @classmethod
     def from_queryset(cls, queryset_class, class_name=None):
+        ## class_name 的默认形式
         if class_name is None:
             class_name = '%sFrom%s' % (cls.__name__, queryset_class.__name__)
         class_dict = {
@@ -172,6 +173,8 @@ class BaseManager(object):
         return id(self)
 
 
+## BaseManager.from_queryset(QuerySet) 得到的 class 的为 BaseManagerFromQuerySet
+## class Manager 继承自 BaseManagerFromQuerySet
 class Manager(BaseManager.from_queryset(QuerySet)):
     pass
 
