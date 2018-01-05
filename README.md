@@ -12,4 +12,8 @@
 
 -   settings TEMPLATES["DIRS"]
 
--   settings EMAIL
+-   ModelForm initial
+
+-   Form.field
+
+-   migration merge

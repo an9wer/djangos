@@ -33,23 +33,24 @@ class DeclarativeFieldsMetaclass(MediaDefiningClass):
     Metaclass that collects Fields declared on the base classes.
     """
     def __new__(mcs, name, bases, attrs):
+        ## 先获取自己的 declared_fields，置入到 current_fields 中
         # Collect fields from current class.
-        ## 先获取自己的 declared_fields
         current_fields = []
         for key, value in list(attrs.items()):
             if isinstance(value, Field):
                 current_fields.append((key, value))
                 attrs.pop(key)
-        ## 按照 creation_counter 对定义的 fields 进行排序
+        ## 按照 creation_counter 对定义的 fields 进行排序，并将 current_fields
+        ## 映射到 attrs 的 declared_fields 字段中
         current_fields.sort(key=lambda x: x[1].creation_counter)
         attrs['declared_fields'] = OrderedDict(current_fields)
 
         new_class = super(DeclarativeFieldsMetaclass, mcs).__new__(mcs, name, bases, attrs)
 
-        # Walk through the MRO.
         ## 然后从所有继承的父类中获取 declared_fields
+        # Walk through the MRO.
         declared_fields = OrderedDict()
-        for base in reversed(new_class.__mro__):
+        for base in reversed(new_class.__mro__):  ## new_class.__mro__ 中会包含 new_class 本身
             # Collect fields from base class.
             if hasattr(base, 'declared_fields'):
                 declared_fields.update(base.declared_fields)
@@ -60,7 +61,8 @@ class DeclarativeFieldsMetaclass(MediaDefiningClass):
                     declared_fields.pop(attr)
 
         ## declared_fields 是一个 dict
-        ## 其 key 是 attribute 的 name，其 value 是 attribute 的 value
+        ## 其 key 是我们在自己定义的 Form 中定义的某个 field 的 name，
+        ## 其 value 是某个 Field 的实例对象
         ##
         ## 例如：
         ##
@@ -69,6 +71,11 @@ class DeclarativeFieldsMetaclass(MediaDefiningClass):
         ## 
         ##     则 declared_fields = {"username": forms.CharField()}
         ##
+        ## 注意：这里的 base_fields 和 declared_fields 都是 new_class 的属性
+        ## (是 class 的直隶属性，而不是 instance 的直隶属性，但是 instance
+        ## 也是可以获取到的。但是不推荐通过 instance 对其进行修改，而是推荐
+        ## 通过 instance.fields 对其进行修改，因为在 BaseForm 会在 __init__ 中
+        ## 将 base_fileds 赋值给 instance.fields)
         new_class.base_fields = declared_fields
         new_class.declared_fields = declared_fields
 
@@ -103,6 +110,9 @@ class BaseForm(object):
         self.empty_permitted = empty_permitted
         self._errors = None  # Stores the errors after clean() has been called.
 
+        ## base_fields 和 declared_fields 都是 class 的直隶属性，而 fields
+        ## 才是 instance 的 直隶属性，只推荐通过 instance.fields 对 fields
+        ## 进行修改。
         # The base_fields class attribute is the *class-wide* definition of
         # fields. Because a particular *instance* of the class might want to
         # alter self.fields, we create self.fields here by copying base_fields.
