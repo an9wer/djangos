@@ -177,6 +177,22 @@ class BaseForm(object):
         for name in self.fields:
             yield self[name]
 
+    ## 例如：
+    ##
+    ##     class SomeForm(forms.Form):
+    ##         username = forms.CharField()
+    ##
+    ##     在 html template 中：
+    ## 
+    ##     {{ form.username }}
+    ##     
+    ##     该语句相当于：
+    ## 
+    ##     form["username"]
+    ##
+    ##     调用的就是这里的 __getitem__() 得到 bound field
+    ##     然后再调用 bound field 的 __str__()，最终 render 到页面
+    ##
     def __getitem__(self, name):
         "Returns a BoundField with the given name."
         try:

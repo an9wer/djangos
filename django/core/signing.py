@@ -189,13 +189,14 @@ class Signer(object):
 class TimestampSigner(Signer):
 
     def timestamp(self):
-        ## 使用 baseconv.base62 对时间进行编码
+        ## 使用 baseconv.base62 对 time 进行编码得到 timestamp
         return baseconv.base62.encode(int(time.time()))
 
     ## >>> TimestampSigner('secret').sign('words')
     ## 'words:1eVcmZ:knPFXPWEIxT1h9PA4vUrcEHG9Kw'
     def sign(self, value):
         value = force_str(value)
+        ## value 的值是 'value:timestamp' 的形式
         value = str('%s%s%s') % (value, self.sep, self.timestamp())
         ## 是对 value, sep 和 timestamp 一起做一个签名
         return super(TimestampSigner, self).sign(value)

@@ -24,6 +24,9 @@ along to the storage system. The two arguments are:
     so if it uses the default AutoField, it might not yet have a value for its
     primary key field.
 
+    注意：如果 model instance 没有 save() 是没有 id 的，所以使用这里的 instance
+    的 id 属性时，可能会得到 None。
+
 2.  filename
 
     The filename that was originally given to the file. This may or may not be

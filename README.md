@@ -17,3 +17,5 @@
 -   Form.field
 
 -   migration merge
+
+-   form data 校验错误之后是如何重新 render 到页面上的

@@ -29,10 +29,12 @@ class Paginator(object):
                  allow_empty_first_page=True):
         self.object_list = object_list
         self._check_object_list_is_ordered()
+        ## 没有对 per_page 做正整数的判断
         self.per_page = int(per_page)
         self.orphans = int(orphans)
         self.allow_empty_first_page = allow_empty_first_page
 
+    ## 主要检测的是 page number 而不是 per page
     def validate_number(self, number):
         """
         Validates the given 1-based page number.
