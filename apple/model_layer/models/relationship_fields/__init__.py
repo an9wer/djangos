@@ -5,6 +5,7 @@ from .foreignkey import (
     FatherModel, SonModel, NameSonModel,
     QueryNameSonModel, BothNameSonModel)
 from .m2m import TeacherModel, StudentModel
+from .intermediate import Person, Group, Membership
 
 
 """

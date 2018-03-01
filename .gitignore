@@ -19,3 +19,6 @@ settings.conf
 
 # symbolic link
 apple/django
+
+# vim swap file
+*swp

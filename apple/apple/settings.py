@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'auth_tool',
     'model_layer',
     'admin_site',
-    'migrations_tool',
     'view_layer',
 ]
 
