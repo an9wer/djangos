@@ -2,6 +2,7 @@ from .forms import *
 
 url_form = {
     "/forms_frame/fields/multivalue/": NameMultiValueForm,
+    "/forms_frame/fields/dynamic/": DynamicForm,
 
     "/forms_frame/modelforms/partfields/": PartFieldsForm,
     "/forms_frame/modelforms/allfields/": AllFieldsForm,
