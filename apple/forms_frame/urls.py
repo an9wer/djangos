@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     url(r'fields/multivalue/$', views.common_form),
     url(r'fields/dynamic/$', views.common_form),
+    url(r'fields/image/$', views.common_form),
     # url(r'fields/multiplechoice/$', views.fields_multiplacechoice),
     # url(r'fields/file/$', views.fields_file),
     # url(r'fields/multiplefile/$', views.fields_multiplefile),

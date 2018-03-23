@@ -3,6 +3,7 @@ from .file import FileForm, MultipleFileForm, ClearFileForm
 from .modelchoice import ModelChoiceForm
 from .modelmultiplechoice import ModelMultipleChoiceForm
 from .multivalue import NameMultiValueForm
+from .image import ImageForm
 
 """
 Although the primary way you’ll use Field classes is in Form classes, you can
