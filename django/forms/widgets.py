@@ -250,6 +250,7 @@ class Widget(six.with_metaclass(RenameWidgetMethods)):
         Given a dictionary of data and this widget's name, returns the value
         of this widget. Returns None if it's not provided.
         """
+        ## 注意: data 是 django 的 QueryDict 对象
         return data.get(name)
 
     def value_omitted_from_data(self, data, files, name):
